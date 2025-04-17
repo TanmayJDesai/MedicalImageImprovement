@@ -1,4 +1,7 @@
 # Medical Image Improvement — Setup Guide
+
+This guide walks you through setting up and running the Medical Image Improvement project from scratch. It's written to be beginner-friendly — no prior experience with Git or VS Code is assumed.
+
 ## Prerequisites
 
 Before you begin, make sure you have the following installed:
@@ -17,43 +20,52 @@ Before you begin, make sure you have the following installed:
 ## Overview of Steps
 
 You will:
-1. Create a GitHub repository and connect it to your computer
-2. Clone the project files
+1. Fork the GitHub repository and clone it to your computer
+2. Create your own branch to work on
 3. Install required dependencies
 4. Run the backend (Python)
 5. Run the frontend (React)
+6. Make changes, commit, and push them
 
-## 1. Set Up Git and GitHub
+## 1. Access the Repository and Set Up Git
 
-### a. Create a GitHub Repository
+### a. Fork the Repository
 
-1. Go to [github.com](https://github.com) and sign in (or create an account).
-2. Click the "+" in the top-right and choose "New repository".
-3. Name the repository `MedicalImageImprovement`.
-4. Do not initialize with a README, .gitignore, or license.
-5. Click "Create repository".
+1. Go to [https://github.com/TanmayJDesai/MedicalImageImprovement](https://github.com/TanmayJDesai/MedicalImageImprovement)
+2. Click the "Fork" button in the top-right corner
+3. This creates a copy of the repository in your GitHub account
 
-### b. Set Up Your Project Folder Locally
+### b. Clone Your Forked Repository
 
 Open your terminal (Mac) or Command Prompt (Windows):
 
 ```bash
-mkdir MedicalProject
-cd MedicalProject
-# Initialize a Git repository
-git init
-# Add your GitHub repo as the remote (replace URL with your GitHub URL)
-git remote add origin https://github.com/YOUR_USERNAME/MedicalImageImprovement.git
-```
-
-## 2. Clone the Repository
-
-Download the project files to your local machine:
-
-```bash
-git clone https://github.com/TanmayJDesai/MedicalImageImprovement.git
+git clone https://github.com/YOUR_USERNAME/MedicalImageImprovement.git
 cd MedicalImageImprovement
 ```
+
+### c. Add the Original Repository as a Remote
+
+This allows you to pull updates from the original repository:
+
+```bash
+git remote add upstream https://github.com/TanmayJDesai/MedicalImageImprovement.git
+```
+
+## 2. Create Your Own Branch
+
+Create and switch to a new branch using your name:
+
+```bash
+git checkout -b yourname
+```
+
+For example:
+```bash
+git checkout -b john-smith
+```
+
+This makes it clear who owns each branch and simplifies merging at the project's conclusion.
 
 ## 3. Install Project Dependencies
 
@@ -119,7 +131,62 @@ npm start
 
 This will open the frontend at http://localhost:3000.
 
-## 5. Opening the Project in VS Code
+## 5. Making Changes and Contributing
+
+### a. Make Your Changes
+
+1. Open the project in VS Code: `code .`
+2. Make changes to the files you want to modify
+3. Test your changes locally
+
+### b. Commit Your Changes
+
+```bash
+# See what files you've changed
+git status
+
+# Add the files you want to commit
+git add file1 file2
+
+# Or add all changed files
+git add .
+
+# Commit with a descriptive message
+git commit -m "Add feature X" or "Fix bug Y"
+```
+
+### c. Push Your Changes to GitHub
+
+```bash
+git push origin yourname
+```
+
+### d. Create a Pull Request
+
+1. Go to your forked repository on GitHub
+2. Click the "Pull Request" button
+3. Select your branch and click "Create Pull Request"
+4. Add a title and description explaining your changes
+5. Submit the pull request
+
+## 6. Keeping Your Fork Updated
+
+To get updates from the original repository:
+
+```bash
+git checkout main
+git pull upstream main
+git push origin main
+```
+
+Then switch back to your personal branch:
+
+```bash
+git checkout yourname
+git merge main
+```
+
+## 7. Opening the Project in VS Code
 
 1. Open Visual Studio Code
 2. Click "File" > "Open Folder"
@@ -153,7 +220,16 @@ npm cache clean --force
 npm install
 ```
 
+### Git Authentication Issues
+
+If you're having trouble authenticating with GitHub:
+1. Make sure you've set up SSH keys or using GitHub CLI
+2. Or use HTTPS with a personal access token
+3. See GitHub's documentation: [https://docs.github.com/en/authentication](https://docs.github.com/en/authentication)
+
 ## Notes
 
 - The backend runs on port 5000, and the frontend runs on port 3000.
 - Both must be running simultaneously for the application to function.
+- Always work on your own name-based branch - don't work directly on the main branch.
+- Include descriptive commit messages to explain your changes.
