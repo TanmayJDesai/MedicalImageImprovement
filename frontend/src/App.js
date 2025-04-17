@@ -41,8 +41,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>UCLA Image Enhancer</h1>
-        <p>Enhance your images with just a click!</p>
+        <h1>UCLA Medical Image Enhancer</h1>
       </header>
       <main className="App-main">
         <div className="upload-section">
