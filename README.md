@@ -1,140 +1,104 @@
-# Medical Image Improvement Project Setup Guide
+Medical Image Improvement — Setup Guide
+This guide walks you through setting up and running the Medical Image Improvement project from scratch. It's written to be beginner-friendly — no prior experience with Git or VS Code is assumed.
+Prerequisites
+Before you begin, make sure you have the following installed:
 
-This guide provides step-by-step instructions to set up and run the Medical Image Improvement project on both Mac and Windows.
+Git
+Python 3.8 or higher
+Node.js and npm
+Visual Studio Code
 
----
+Download Links
 
-## Prerequisites
+Git: https://git-scm.com/downloads
+Python: https://www.python.org/downloads/
+Node.js: https://nodejs.org/
+VS Code: https://code.visualstudio.com/
 
-Before starting, make sure you have the following installed:
-- **Git**
-- **Python** (3.8 or higher)
-- **Node.js** and **npm**
-- **Visual Studio Code**
+Overview of Steps
+You will:
 
----
+Create a GitHub repository and connect it to your computer
+Clone the project files
+Install required dependencies
+Run the backend (Python)
+Run the frontend (React)
 
-## Getting Started
+1. Set Up Git and GitHub
+a. Create a GitHub Repository
 
-### 1. Clone the Repository
+Go to github.com and sign in (or create an account).
+Click the "+" in the top-right and choose "New repository".
+Name the repository MedicalImageImprovement.
+Do not initialize with a README, .gitignore, or license.
+Click "Create repository".
 
-```bash
-# Create a folder for your project
-mkdir MedicalProject
+b. Set Up Your Project Folder Locally
+Open your terminal (Mac) or Command Prompt (Windows):
+bashmkdir MedicalProject
 cd MedicalProject
-
-# Clone the repository
-git clone https://github.com/TanmayJDesai/MedicalImageImprovement.git
+# Initialize a Git repository
+git init
+# Add your GitHub repo as the remote (replace URL with your GitHub URL)
+git remote add origin https://github.com/YOUR_USERNAME/MedicalImageImprovement.git
+2. Clone the Repository
+Download the project files to your local machine:
+bashgit clone https://github.com/TanmayJDesai/MedicalImageImprovement.git
 cd MedicalImageImprovement
-2. Installing Dependencies
-Backend Dependencies (Python/Flask)
-For Mac:
-
-bash
-# Navigate to backend folder
-cd backend
-
-# Create virtual environment
+3. Install Project Dependencies
+A. Backend (Python/Flask)
+Mac
+bashcd backend
 python3 -m venv venv
-
-# Activate virtual environment
 source venv/bin/activate
-
-# Install required packages
 pip install -r requirements.txt
-For Windows:
-
-bash
-# Navigate to backend folder
-cd backend
-
-# Create virtual environment
+Windows
+bashcd backend
 python -m venv venv
-
-# Activate virtual environment
 venv\Scripts\activate
-
-# Install required packages
 pip install -r requirements.txt
-Frontend Dependencies (React)
-For both Mac and Windows:
-
-bash
-# Navigate to frontend folder from project root
-cd frontend
-
-# Install Node.js dependencies
+B. Frontend (React)
+Works the same on Mac and Windows:
+bashcd ../frontend
 npm install
-3. Running the Application
-Start the Backend Server
-Keep your virtual environment activated and run:
-
-For Mac:
-
-bash
-# Make sure you're in the backend folder with venv activated
+4. Running the Application
+A. Start the Backend Server
+Mac
+bashcd backend
+source venv/bin/activate
 python3 app.py
-For Windows:
-
-bash
-# Make sure you're in the backend folder with venv activated
+Windows
+bashcd backend
+venv\Scripts\activate
 python app.py
-The backend server will start running on http://localhost:5000
-
-Start the Frontend Server
-Open a new terminal window while keeping the backend running.
-
-bash
-# Navigate to frontend folder
-cd frontend
-
-# Start React development server
+The backend will run at http://localhost:5000.
+B. Start the Frontend Server
+Open a new terminal window:
+bashcd frontend
 npm start
-This will automatically open your browser to http://localhost:3000
+This will open the frontend at http://localhost:3000.
+5. Opening the Project in VS Code
 
-Using the Application in VS Code
-Open VS Code
-
-Go to File > Open Folder
-
+Open Visual Studio Code
+Click "File" > "Open Folder"
 Select the MedicalImageImprovement folder
-
-To run the application:
-
-Open a terminal in VS Code (Terminal > New Terminal)
-
-Follow the "Installing Dependencies" and "Running the Application" steps above.
+Open a terminal in VS Code: "Terminal" > "New Terminal"
+Follow the instructions above to install dependencies and run the backend and frontend
 
 Troubleshooting
-Backend Issues
-If port 5000 is already in use:
-
-Mac: Run:
-
-bash
-lsof -i :5000
-Find the process and kill it:
-
-bash
+Port 5000 Already in Use (Backend)
+Mac
+bashlsof -i :5000
 kill -9 [PID]
-Windows: Run:
-
-bash
-netstat -ano | findstr :5000
-Then terminate the process:
-
-bash
+Windows
+bashnetstat -ano | findstr :5000
 taskkill /PID [PID] /F
-Frontend Issues
-If npm install fails:
-
-bash
-rm -rf node_modules
+npm Install Fails (Frontend)
+bashrm -rf node_modules
 npm cache clean --force
 npm install
-Important Notes
-Both backend and frontend must run simultaneously.
+Notes
 
-Backend runs on port 5000, frontend on port 3000.
-
-Make sure your virtual environment is activated when running the backend.
+The backend runs on port 5000, and the frontend runs on port 3000.
+Both must be running simultaneously for the application to function.
+RetryClaude does not have the ability to run the code it generates yet.Claude can make mistakes. Please double-check responses.
