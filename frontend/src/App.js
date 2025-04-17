@@ -2,169 +2,109 @@ import React, { useState } from 'react';
 import './App.css';
 
 function App() {
-  const [originalImage, setOriginalImage] = useState(null);
-  const [improvedImage, setImprovedImage] = useState(null);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [isUploading, setIsUploading] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [image, setImage] = useState(null);
   const [error, setError] = useState('');
+  const [improvedImage, setImprovedImage] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setSelectedFile(file);
-      setOriginalImage(URL.createObjectURL(file));
-      setImprovedImage(null);
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      setImage(URL.createObjectURL(file));
       setError('');
+    } else {
+      setError('Please upload a valid image file.');
     }
   };
 
-  const handleUpload = async () => {
-    if (!selectedFile) {
-      setError('Please select an image first.');
-      return;
-    }
-
-    setIsUploading(true);
-    setError('');
-
-    const formData = new FormData();
-    formData.append('image', selectedFile);
-
-    try {
-      const response = await fetch('http://localhost:5000/api/upload', {
-        method: 'POST',
-        body: formData
-      });
-      
-      const data = await response.json();
-
-      if (data.success) {
-        // Store the filename for improvement request
-        setSelectedFile({ ...selectedFile, serverFilename: data.original_image });
-      } else {
-        setError('Upload failed.');
-      }
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      setError('Error uploading image. Please try again.');
-    } finally {
-      setIsUploading(false);
+  const handleImproveImage = () => {
+    if (image) {
+      setImprovedImage(image); // Placeholder for improved image logic
     }
   };
 
-  const handleImprove = async () => {
-    if (!selectedFile || !selectedFile.serverFilename) {
-      setError('Please upload an image first.');
-      return;
-    }
-
-    setIsProcessing(true);
-    setError('');
-
-    try {
-      const response = await fetch('http://localhost:5000/api/improve', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          filename: selectedFile.serverFilename
-        })
-      });
-      
-      const data = await response.json();
-
-      if (data.success) {
-        const improvedImageUrl = `http://localhost:5000/api/images/${data.improved_image}?t=${new Date().getTime()}`;
-        setImprovedImage(improvedImageUrl);
-      } else {
-        setError('Image improvement failed.');
-      }
-    } catch (error) {
-      console.error('Error improving image:', error);
-      setError('Error improving image. Please try again.');
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-
-  const handleClear = () => {
-    setOriginalImage(null);
+  const handleClearImage = () => {
+    setImage(null);
     setImprovedImage(null);
-    setSelectedFile(null);
-    // Reset the file input
-    const fileInput = document.getElementById('image-upload');
-    if (fileInput) fileInput.value = '';
+  };
+
+  const handleImageClick = (imageUrl) => {
+    setSelectedImage(imageUrl);
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
   };
 
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Image Improvement Tool</h1>
+        <h1>UCLA Image Enhancer</h1>
+        <p>Enhance your images with just a click!</p>
       </header>
-      
       <main className="App-main">
         <div className="upload-section">
-          <input 
-            type="file" 
-            id="image-upload" 
-            accept="image/*" 
-            onChange={handleFileChange} 
+          <input
+            type="file"
+            accept="image/*"
             className="file-input"
+            id="imageUpload"
+            onChange={handleFileUpload}
           />
-          <label htmlFor="image-upload" className="upload-btn">
-            Select Image
+          <label htmlFor="imageUpload" className="upload-btn">
+            Upload Image
           </label>
-          
-          <button 
-            onClick={handleUpload} 
-            disabled={!selectedFile || isUploading}
-            className="upload-btn"
-          >
-            {isUploading ? 'Uploading...' : 'Upload'}
-          </button>
+          {error && <p className="error-message">{error}</p>}
         </div>
-        
-        {error && <div className="error-message">{error}</div>}
         
         <div className="image-comparison">
-          <div className="image-container">
-            <h2>Original Image</h2>
-            <div className="image-box">
-              {originalImage ? (
-                <>
-                  <button className="clear-btn" onClick={handleClear}>✕</button>
-                  <img src={originalImage} alt="Original" className="display-image" />
-                </>
-              ) : (
-                <p className="placeholder-text">No image selected</p>
-              )}
+          {image && (
+            <div className="image-container">
+              <h3>Original Image</h3>
+              <div className="image-box" onClick={() => handleImageClick(image)}>
+                <img src={image} alt="Original" className="display-image" />
+                <button className="clear-btn" onClick={handleClearImage}>
+                  X
+                </button>
+              </div>
             </div>
-          </div>
-          
-          <div className="improve-section">
-            <button 
-              onClick={handleImprove} 
-              disabled={!selectedFile || !selectedFile.serverFilename || isProcessing}
-              className="improve-btn"
-            >
-              {isProcessing ? 'Processing...' : 'Improve'}
-            </button>
-          </div>
-          
-          <div className="image-container">
-            <h2>Improved Image</h2>
-            <div className="image-box">
-              {improvedImage ? (
+          )}
+
+          {improvedImage && (
+            <div className="image-container">
+              <h3>Improved Image</h3>
+              <div className="image-box" onClick={() => handleImageClick(improvedImage)}>
                 <img src={improvedImage} alt="Improved" className="display-image" />
-              ) : (
-                <p className="placeholder-text">Improved image will appear here</p>
-              )}
+              </div>
             </div>
+          )}
+        </div>
+
+        {image && !improvedImage && (
+          <button className="improve-btn" onClick={handleImproveImage}>
+            Improve Image
+          </button>
+        )}
+        
+        {!image && <p className="placeholder-text">Please upload an image to start.</p>}
+      </main>
+
+      {/* Modal for viewing images in full screen */}
+      {isModalOpen && (
+        <div className="modal" onClick={handleModalClose}>
+          <div className="modal-content">
+            <img
+              src={selectedImage}
+              alt="Full view"
+              className="modal-image"
+              onClick={(e) => e.stopPropagation()} // Prevent modal close on image click
+            />
+            <button className="close-btn" onClick={handleModalClose}>X</button>
           </div>
         </div>
-      </main>
+      )}
     </div>
   );
 }
