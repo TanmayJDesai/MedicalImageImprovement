@@ -1,7 +1,4 @@
 # Medical Image Improvement — Setup Guide
-
-This guide walks you through setting up and running the Medical Image Improvement project from scratch. It's written to be beginner-friendly — no prior experience with Git or VS Code is assumed.
-
 ## Prerequisites
 
 Before you begin, make sure you have the following installed:
