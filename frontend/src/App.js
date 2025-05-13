@@ -8,6 +8,9 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
 
+  const [visualHighlights, setVisualHighlights] = useState(false);
+  const [descriptions, setDescriptions] = useState(false);
+
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith('image/')) {
@@ -44,6 +47,7 @@ function App() {
         <h1>UCLA Medical Image Enhancer</h1>
       </header>
       <main className="App-main">
+        {!image && (
         <div className="upload-section">
           <input
             type="file"
@@ -57,18 +61,45 @@ function App() {
           </label>
           {error && <p className="error-message">{error}</p>}
         </div>
+        )}
+        {image && (
+          <div className='toggle-container'>
+            <div>
+              <span>AI Visual Highlights</span>
+              <label class="switch">
+                  <input 
+                    type="checkbox"
+                    checked={visualHighlights}
+                    onChange={() => setVisualHighlights(!visualHighlights)}
+                  />
+                  <span class="slider round"></span>
+                </label>
+            </div>
+            <div>
+              <span>AI Descriptions</span>
+              <label class="switch">
+                <input 
+                type="checkbox"
+                checked={descriptions}
+                onChange={() => setDescriptions(!descriptions)}
+                />
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
+        )}
         
         <div className="image-comparison">
           {image && (
-            <div className="image-container">
-              <h3>Original Image</h3>
-              <div className="image-box" onClick={() => handleImageClick(image)}>
-                <img src={image} alt="Original" className="display-image" />
-                <button className="clear-btn" onClick={handleClearImage}>
-                  X
-                </button>
+              <div className="image-container">
+                <h3>Original Image</h3>
+                <div className="image-box" onClick={() => handleImageClick(image)}>
+                  <img src={image} alt="Original" className="display-image" />
+                  <button className="clear-btn" onClick={handleClearImage}>
+                    X
+                  </button>
+                </div>
               </div>
-            </div>
           )}
 
           {improvedImage && (
@@ -104,6 +135,7 @@ function App() {
           </div>
         </div>
       )}
+      
     </div>
   );
 }
