@@ -5,14 +5,12 @@ from werkzeug.utils import secure_filename
 from flask_cors import CORS
 
 app = Flask(__name__, static_folder='static')
-CORS(app)  # Enable CORS for all routes
+CORS(app)  
 
-# Configuration
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max upload
 
-# Ensure upload directory exists
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 def allowed_file(filename):
@@ -30,16 +28,13 @@ def upload_file():
         return jsonify({'error': 'No selected file'}), 400
     
     if file and allowed_file(file.filename):
-        # Generate unique filename
         original_filename = secure_filename(file.filename)
         filename_parts = os.path.splitext(original_filename)
         unique_filename = f"{filename_parts[0]}_{str(uuid.uuid4())}{filename_parts[1]}"
         
-        # Save the original image
         original_path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
         file.save(original_path)
         
-        # Return the URL to the uploaded image
         return jsonify({
             'success': True,
             'original_image': unique_filename
@@ -59,12 +54,9 @@ def improve_image():
     if not os.path.exists(original_path):
         return jsonify({'error': 'Original image not found'}), 404
     
-    # Generate filename for improved image
     improved_filename = f"improved_{original_filename}"
     improved_path = os.path.join(app.config['UPLOAD_FOLDER'], improved_filename)
     
-    # For now, we'll just copy the original file as the improved version
-    # You'll replace this with your image processing algorithm later
     import shutil
     shutil.copy(original_path, improved_path)
     
