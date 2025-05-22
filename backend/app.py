@@ -23,7 +23,7 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'improved'), exist_ok=True)
 
 # Load the enhanced super-resolution model
-MODEL_PATH = 'models/espcn_model_enhanced_medical.h5'  # Use the best performing model
+MODEL_PATH = 'models/enhanced_enhanced_model.h5'  # Use the best performing model
 model = None
 
 def allowed_file(filename):
