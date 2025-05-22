@@ -7,38 +7,38 @@ export default function ImageAnnotationTool({ improvedImage }) {
   const fabricRef = useRef(null);
 
   useEffect(() => {
-    const canvasElement = canvasRef.current;
-    if (!improvedImage || !canvasElement) return;
-  
-    // Prevent double initialization
-    if (canvasElement.__fabricInitialized) return;
-  
-    // Get visual size of canvas from DOM
-    const { width, height } = canvasElement.getBoundingClientRect();
-  
-    // Set internal resolution
-    canvasElement.width = width;
-    canvasElement.height = height;
-  
-    // Initialize Fabric
-    const canvas = new Canvas(canvasElement);
-    canvas.setWidth(width);
-    canvas.setHeight(height);
-  
-    fabricRef.current = canvas;
-  
-    // Mark DOM element as initialized
-    canvasElement.__fabricInitialized = true;
-  
-    return () => {
-      if (fabricRef.current) {
-        fabricRef.current.dispose();
-        fabricRef.current = null;
-        canvasElement.__fabricInitialized = false;
-      }
-    };
-  }, [improvedImage]);
-  
+  const canvasElement = canvasRef.current;
+  if (!improvedImage || !canvasElement) return;
+
+  // Prevent double initialization
+  if (canvasElement.__fabricInitialized) return;
+
+  // Get visual size of canvas from DOM
+  const { width, height } = canvasElement.getBoundingClientRect();
+
+  // Set internal resolution
+  canvasElement.width = width;
+  canvasElement.height = height;
+
+  // Initialize Fabric
+  const canvas = new Canvas(canvasElement);
+  canvas.setWidth(width);
+  canvas.setHeight(height);
+
+  fabricRef.current = canvas;
+
+  // Mark DOM element as initialized
+  canvasElement.__fabricInitialized = true;
+
+  return () => {
+    if (fabricRef.current) {
+      fabricRef.current.dispose();
+      fabricRef.current = null;
+      canvasElement.__fabricInitialized = false;
+    }
+  };
+}, [improvedImage]);
+
   
 
   const deleteSelectedAnnotation = () => {
@@ -83,6 +83,12 @@ export default function ImageAnnotationTool({ improvedImage }) {
       editable: true,
       selectable: true,
       annotationGroupId: id,
+    });
+
+    // Attach toggle logic to the rect
+    rect.on("mousedown", () => {
+        text.visible = !text.visible;
+        canvas.renderAll();
     });
 
     canvas.add(rect);
