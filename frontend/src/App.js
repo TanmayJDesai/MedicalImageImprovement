@@ -3,7 +3,9 @@ import './App.css';
 
 function App() {
   const [image, setImage] = useState(null);
+  const [uploadedFile, setUploadedFile] = useState(null);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const [improvedImage, setImprovedImage] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -11,24 +13,74 @@ function App() {
   const [visualHighlights, setVisualHighlights] = useState(false);
   const [descriptions, setDescriptions] = useState(false);
 
+  const apiUrl = 'http://localhost:5002'; // Updated port
+
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith('image/')) {
       setImage(URL.createObjectURL(file));
+      setUploadedFile(file);
       setError('');
+      setImprovedImage(null); // Clear previous improved image
     } else {
       setError('Please upload a valid image file.');
     }
   };
 
-  const handleImproveImage = () => {
-    if (image) {
-      setImprovedImage(image); // Placeholder for improved image logic
+  const handleImproveImage = async () => {
+    if (!uploadedFile) {
+      setError('Please upload an image first.');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError('');
+
+      // Step 1: Upload the image to the server
+      const formData = new FormData();
+      formData.append('image', uploadedFile);
+
+      const uploadResponse = await fetch(`${apiUrl}/api/upload`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      const uploadData = await uploadResponse.json();
+
+      if (!uploadResponse.ok) {
+        throw new Error(uploadData.error || 'Failed to upload image');
+      }
+
+      // Step 2: Request super-resolution processing
+      const improveResponse = await fetch(`${apiUrl}/api/improve`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          filename: uploadData.original_image,
+        }),
+      });
+
+      const improveData = await improveResponse.json();
+
+      if (!improveResponse.ok) {
+        throw new Error(improveData.error || 'Failed to improve image');
+      }
+
+      // Set the improved image URL
+      setImprovedImage(`${apiUrl}/api/images/${improveData.improved_image}`);
+    } catch (err) {
+      setError(`Error: ${err.message}`);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleClearImage = () => {
     setImage(null);
+    setUploadedFile(null);
     setImprovedImage(null);
   };
 
@@ -66,24 +118,24 @@ function App() {
           <div className='toggle-container'>
             <div>
               <span>AI Visual Highlights</span>
-              <label class="switch">
+              <label className="switch">
                   <input 
                     type="checkbox"
                     checked={visualHighlights}
                     onChange={() => setVisualHighlights(!visualHighlights)}
                   />
-                  <span class="slider round"></span>
+                  <span className="slider round"></span>
                 </label>
             </div>
             <div>
               <span>AI Descriptions</span>
-              <label class="switch">
+              <label className="switch">
                 <input 
                 type="checkbox"
                 checked={descriptions}
                 onChange={() => setDescriptions(!descriptions)}
                 />
-                <span class="slider round"></span>
+                <span className="slider round"></span>
               </label>
             </div>
           </div>
@@ -113,10 +165,16 @@ function App() {
         </div>
 
         {image && !improvedImage && (
-          <button className="improve-btn" onClick={handleImproveImage}>
-            Improve Image
+          <button 
+            className="improve-btn" 
+            onClick={handleImproveImage}
+            disabled={loading}
+          >
+            {loading ? 'Processing...' : 'Improve Image'}
           </button>
         )}
+        
+        {loading && <p className="loading-text">Processing your image. This may take a moment...</p>}
         
         {!image && <p className="placeholder-text">Please upload an image to start.</p>}
       </main>
