@@ -1,19 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap");
 
-body, html {
+body,
+html {
   margin: 0;
   padding: 0;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   background-color: #f4f6fa;
-  color: #003B5C;
+  color: #003b5c;
 }
 
 .App-header {
-  background-color: #2774AE;
+  background-color: #2774ae;
   padding: 2rem;
   color: white;
   text-align: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .App-main {
@@ -33,14 +34,14 @@ body, html {
 }
 
 .upload-btn {
-  background-color: #FFD100;
-  color: #003B5C;
+  background-color: #ffd100;
+  color: #003b5c;
   padding: 0.75rem 1.5rem;
   border: none;
   font-weight: 600;
   cursor: pointer;
   border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   transition: transform 0.2s;
 }
 
@@ -63,7 +64,7 @@ body, html {
   background: white;
   border-radius: 12px;
   padding: 1rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   width: 450px; /* Increased size */
   min-height: 450px; /* Increased size */
   position: relative;
@@ -86,7 +87,7 @@ body, html {
   top: 0.5rem;
   right: 0.5rem;
   border: none;
-  background: #FF6B6B;
+  background: #ff6b6b;
   color: white;
   border-radius: 50%;
   padding: 0.25rem 0.5rem;
@@ -99,7 +100,7 @@ body, html {
 }
 
 .improve-btn {
-  background-color: #2774AE;
+  background-color: #2774ae;
   color: white;
   padding: 0.75rem 1.5rem;
   border: none;
@@ -107,7 +108,7 @@ body, html {
   border-radius: 8px;
   cursor: pointer;
   margin-top: 1rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   transition: background-color 0.2s ease;
 }
 
@@ -157,7 +158,7 @@ body, html {
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
-  background: #FF6B6B;
+  background: #ff6b6b;
   color: white;
   border: none;
   padding: 0.25rem 0.5rem;
@@ -169,84 +170,51 @@ body, html {
   background: #e34444;
 }
 
-/* The switch - the box around the slider */
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
+.annotation-container {
+  width: 70%;
+  margin: auto;
+  padding: 0.5rem;
 }
 
-/* Hide default HTML checkbox */
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-/* The slider */
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-input:checked + .slider {
-  background-color: #2196F3;
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
-}
-
-input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
-}
-
-/* Rounded sliders */
-.slider.round {
-  border-radius: 34px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
-}
-
-.toggle-container {
-  width: 37.5%;
+.annotation-controls {
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  align-items: center;
+  gap: 1rem;
 }
 
+.annotate-button,
+.delete-button {
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
-.toggle-container > div {
-  width: 65%;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.annotate-button {
+  background-color: #facc15; /* yellow-400 */
+  color: white;
+}
+
+.delete-button {
+  background-color: #ef4444; /* red-500 */
+  color: white;
+}
+
+.annotation-box {
+  border: 2px solid #e5e7eb; /* gray-200 */
+  border-radius: 0.5rem;
+  padding: 1rem;
+  overflow-x: auto;
+  height: 500px;
+  width: 100%;
+}
+
+.display-canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .App {
