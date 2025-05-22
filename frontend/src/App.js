@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import './ImageAnnotationTool.js'
 import './App.css';
+import ImageAnnotationTool from './ImageAnnotationTool.js';
 
 function App() {
   const [image, setImage] = useState(null);
@@ -10,6 +12,7 @@ function App() {
 
   const [visualHighlights, setVisualHighlights] = useState(false);
   const [descriptions, setDescriptions] = useState(false);
+  const [annotate, setAnnotate] = useState(false);
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -62,35 +65,16 @@ function App() {
           {error && <p className="error-message">{error}</p>}
         </div>
         )}
-        {image && (
-          <div className='toggle-container'>
-            <div>
-              <span>AI Visual Highlights</span>
-              <label class="switch">
-                  <input 
-                    type="checkbox"
-                    checked={visualHighlights}
-                    onChange={() => setVisualHighlights(!visualHighlights)}
-                  />
-                  <span class="slider round"></span>
-                </label>
-            </div>
-            <div>
-              <span>AI Descriptions</span>
-              <label class="switch">
-                <input 
-                type="checkbox"
-                checked={descriptions}
-                onChange={() => setDescriptions(!descriptions)}
-                />
-                <span class="slider round"></span>
-              </label>
-            </div>
-          </div>
+        {improvedImage && !annotate && (
+          <div className="upload-section">
+            <label className="upload-btn" onClick= {() => setAnnotate(!annotate)} >
+              Annotate
+            </label>
+        </div>
         )}
         
         <div className="image-comparison">
-          {image && (
+          {!annotate && image && (
               <div className="image-container">
                 <h3>Original Image</h3>
                 <div className="image-box" onClick={() => handleImageClick(image)}>
@@ -102,27 +86,27 @@ function App() {
               </div>
           )}
 
-          {improvedImage && (
-            <div className="image-container">
-              <h3>Improved Image</h3>
-              <div className="image-box" onClick={() => handleImageClick(improvedImage)}>
-                <img src={improvedImage} alt="Improved" className="display-image" />
+          {!annotate && improvedImage && (
+              <div className="image-container">
+                <h3>Improved Image</h3>
+                <div className="image-box" onClick={() => handleImageClick(improvedImage)}>
+                  <img src={improvedImage} alt="Improved" className="display-image" />
               </div>
             </div>
           )}
         </div>
 
-        {image && !improvedImage && (
+        {!annotate && image && !improvedImage && (
           <button className="improve-btn" onClick={handleImproveImage}>
             Improve Image
           </button>
         )}
         
-        {!image && <p className="placeholder-text">Please upload an image to start.</p>}
+        {!annotate && !image && <p className="placeholder-text">Please upload an image to start.</p>}
       </main>
 
       {/* Modal for viewing images in full screen */}
-      {isModalOpen && (
+      {!annotate && isModalOpen && (
         <div className="modal" onClick={handleModalClose}>
           <div className="modal-content">
             <img
@@ -135,7 +119,13 @@ function App() {
           </div>
         </div>
       )}
-      
+
+
+    { annotate &&
+      <div className="image-comparison">
+        <ImageAnnotationTool improvedImage={improvedImage} />
+      </div>
+    }
     </div>
   );
 }
