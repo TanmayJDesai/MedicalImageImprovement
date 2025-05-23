@@ -1,8 +1,11 @@
 # ClearView: Improving X-Ray Image Quality — Setup Guide
 
+![cs188logo](https://github.com/user-attachments/assets/26776dfe-aa88-4eaf-bb54-b9b9cc657369)
+
 Medical workers in underserved communities do not have immediate access to adequate imaging equipment, leading to low-quality/lack of necessary images for diagnoses. Diagnoses could be more accurate with improved x-ray quality, leading to life-saving outcomes in many cases with basic x-ray images. 
 
 We worked on making an open-source technical pipeline that improves X-Ray Quality. This guide walks you through setting up and running the our project from scratch. It's written to be beginner-friendly — no prior experience with Git or VS Code is assumed.
+
 
 ## Prerequisites
 
