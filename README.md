@@ -1,6 +1,8 @@
 # Medical Image Improvement — Setup Guide
 
-This guide walks you through setting up and running the Medical Image Improvement project from scratch. It's written to be beginner-friendly — no prior experience with Git or VS Code is assumed.
+Medical workers in underserved communities do not have immediate access to adequate imaging equipment, leading to low-quality/lack of necessary images for diagnoses. Diagnoses could be more accurate with improved x-ray quality, leading to life-saving outcomes in many cases with basic x-ray images. 
+
+We worked on making an open-source technical pipeline that improves X-Ray Quality. This guide walks you through setting up and running the our project from scratch. It's written to be beginner-friendly — no prior experience with Git or VS Code is assumed.
 
 ## Prerequisites
 
