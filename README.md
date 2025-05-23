@@ -1,4 +1,4 @@
-# Medical Image Improvement — Setup Guide
+# ClearView: Improving X-Ray Image Quality — Setup Guide
 
 Medical workers in underserved communities do not have immediate access to adequate imaging equipment, leading to low-quality/lack of necessary images for diagnoses. Diagnoses could be more accurate with improved x-ray quality, leading to life-saving outcomes in many cases with basic x-ray images. 
 
