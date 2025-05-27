@@ -109,7 +109,7 @@ export default function ImageAnnotationTool({ improvedImage }) {
           Delete Selected
         </button>
       </div>
-      <h3>Annotate Image</h3>
+      <h3>Annotate Upgraded Image</h3>
       <div
         className="annotation-wrapper"
         style={{

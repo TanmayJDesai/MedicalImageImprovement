@@ -362,8 +362,7 @@ input:checked + .slider:before {
 }
 
 .image-comparison {
-  display: flex;
-  flex-wrap: wrap;
+  display: side;
   justify-content: center;
   gap: 20px;
   margin: 20px 0;

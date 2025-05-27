@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import './ImageAnnotationTool.js'
+import './OrigImageAnnotationTool.js'
 import './App.css';
 import ImageAnnotationTool from './ImageAnnotationTool.js';
+import OrigImageAnnotationTool from './OrigImageAnnotationTool.js';
 
 function App() {
   const [image, setImage] = useState(null);
@@ -186,6 +188,7 @@ function App() {
 
     { annotate &&
       <div className="image-comparison">
+        <OrigImageAnnotationTool improvedImage={image} />
         <ImageAnnotationTool improvedImage={improvedImage} />
       </div>
     }
