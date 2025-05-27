@@ -98,10 +98,10 @@ function App() {
   };
 
   const reset = () => {
-    setImage(!image);
-    setImprovedImage(!improvedImage);
-    setSelectedImage(!selectedImage);
-    setAnnotate(!annotate);
+    setImage(false);
+    setImprovedImage(false);
+    setSelectedImage(false);
+    setAnnotate(false);
   }
 
   return (
