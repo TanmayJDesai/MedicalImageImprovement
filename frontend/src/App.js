@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import logo from './HCI_logo.png';
 import './ImageAnnotationTool.js'
 import './OrigImageAnnotationTool.js'
 import './App.css';
@@ -106,7 +107,8 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1 onClick={() => reset()}>UCLA Medical Image Enhancer</h1>
+        <img src={logo} alt="HCI Logo" className='HCI_logo'/>
+        <h1 onClick={() => reset()} className="HCI_title">ClearView: Improving X-Ray Image Quality</h1>
       </header>
       <main className="App-main">
         {!image && (

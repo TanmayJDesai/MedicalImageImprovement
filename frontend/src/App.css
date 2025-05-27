@@ -227,8 +227,11 @@ html {
 
 .App-header {
   background-color: #0062b3;
-  padding: 20px;
+  padding: 30px;
   color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .App-header:hover {
@@ -484,3 +487,11 @@ input:checked + .slider:before {
     width: 100%;
   }
 }
+
+.HCI_logo {
+  width: 15ex;
+  height: auto;
+  position: absolute;
+  left: 2%;
+}
+
