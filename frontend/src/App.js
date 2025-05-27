@@ -94,10 +94,15 @@ function App() {
     setIsModalOpen(false);
   };
 
+  const reset = () => {
+    setImage(!image);
+    setImprovedImage(!improvedImage)
+  }
+
   return (
     <div className="App">
       <header className="App-header">
-        <h1>UCLA Medical Image Enhancer</h1>
+        <h1 onClick={() => reset()}>UCLA Medical Image Enhancer</h1>
       </header>
       <main className="App-main">
         {!image && (
