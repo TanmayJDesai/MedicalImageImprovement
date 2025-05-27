@@ -96,7 +96,9 @@ function App() {
 
   const reset = () => {
     setImage(!image);
-    setImprovedImage(!improvedImage)
+    setImprovedImage(!improvedImage);
+    setSelectedImage(!selectedImage);
+    setAnnotate(!annotate);
   }
 
   return (

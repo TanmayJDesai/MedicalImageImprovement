@@ -85,12 +85,6 @@ export default function ImageAnnotationTool({ improvedImage }) {
       annotationGroupId: id,
     });
 
-    // Attach toggle logic to the rect
-    rect.on("mousedown", () => {
-        text.visible = !text.visible;
-        canvas.renderAll();
-    });
-
     canvas.add(rect);
     canvas.add(text);
     canvas.setActiveObject(text);
