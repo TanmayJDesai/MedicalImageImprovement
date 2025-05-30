@@ -109,6 +109,7 @@ function App() {
       <header className="App-header">
         <img src={logo} alt="HCI Logo" className='HCI_logo'/>
         <h1 onClick={() => reset()} className="HCI_title">ClearView: Improving X-Ray Image Quality</h1>
+        <button onClick={() => reset()} className='home-button'>HOME</button>
       </header>
       <main className="App-main">
         {!image && (

@@ -231,7 +231,7 @@ html {
   color: white;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
 }
 
 .App-header:hover {
@@ -491,7 +491,33 @@ input:checked + .slider:before {
 .HCI_logo {
   width: 15ex;
   height: auto;
-  position: absolute;
+  /* position: absolute; */
   left: 2%;
 }
 
+.home-button {
+  background: white;
+  color: #0062b3;
+  font-size: 16px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  font-weight: bold;
+}
+
+.home-button:hover {
+  background: white;
+  transform: scale(1.05);
+}
+
+.home-button:active {
+  background: #388E3C;
+  transform: scale(0.98);
+}
+
+.home-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.3);
+}
