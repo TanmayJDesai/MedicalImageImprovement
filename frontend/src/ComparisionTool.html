@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Quality Comparison</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .upload-section {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .upload-box {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        
+        .file-input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .file-input-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px dashed rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .file-input-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.8);
+            transform: translateY(-2px);
+        }
+        
+        .preview {
+            width: 100%;
+            max-height: 200px;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+        
+        .calculate-btn {
+            display: block;
+            width: 250px;
+            height: 50px;
+            margin: 20px auto;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .calculate-btn:disabled {
+            background: rgba(255, 255, 255, 0.2);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .results {
+            display: none;
+            margin-top: 30px;
+        }
+        
+        .metric-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .metric-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 10px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .metric-description {
+            font-size: 0.9em;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+        
+        .improvement-indicator {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .better {
+            background: rgba(0, 255, 0, 0.3);
+            color: #00ff00;
+        }
+        
+        .worse {
+            background: rgba(255, 0, 0, 0.3);
+            color: #ff6b6b;
+        }
+        
+        .same {
+            background: rgba(255, 255, 0, 0.3);
+            color: #ffff00;
+        }
+        
+        .overall-verdict {
+            background: linear-gradient(45deg, rgba(0, 255, 0, 0.2), rgba(0, 200, 0, 0.3));
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .verdict-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .verdict-text {
+            font-size: 1.3em;
+            margin: 10px 0;
+        }
+        
+        .error {
+            color: #ff6b6b;
+            text-align: center;
+            margin-top: 20px;
+            font-weight: 500;
+        }
+        
+        .loading {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        
+        .info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Detail & Contrast Analyzer</h1>
+        
+        <div class="info">
+            <strong>Detail & Contrast Analysis:</strong> Upload two images to measure how much better the second image is in terms of detail sharpness and contrast enhancement. Perfect for comparing original vs enhanced/processed images.
+        </div>
+        
+        <div class="upload-section">
+            <div class="upload-box">
+                <h3>📷 Image A (Reference)</h3>
+                <div class="file-input-wrapper">
+                    <input type="file" id="imageA" class="file-input" accept="image/*">
+                    <div class="file-input-button">
+                        📁 Choose Image A
+                    </div>
+                </div>
+                <img id="previewA" class="preview">
+            </div>
+            
+            <div class="upload-box">
+                <h3>🎯 Image B (Compare)</h3>
+                <div class="file-input-wrapper">
+                    <input type="file" id="imageB" class="file-input" accept="image/*">
+                    <div class="file-input-button">
+                        📁 Choose Image B
+                    </div>
+                </div>
+                <img id="previewB" class="preview">
+            </div>
+        </div>
+        
+        <button id="calculateBtn" class="calculate-btn" disabled>🔍 Compare Quality</button>
+        
+        <div id="loading" class="loading" style="display: none;">
+            🔄 Analyzing visual quality...
+        </div>
+        
+        <div id="results" class="results">
+            <div class="metric-card">
+                <div class="metric-title">
+                    🔍 Detail Sharpness Score
+                    <span id="sharpnessIndicator" class="improvement-indicator"></span>
+                </div>
+                <div id="sharpnessValue" class="metric-value">--</div>
+                <div class="metric-description">
+                    Measures fine detail preservation and edge sharpness. Higher = more detailed. >80 excellent, >60 good, >40 fair.
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-title">
+                    🌗 Contrast Enhancement Score
+                    <span id="contrastIndicator" class="improvement-indicator"></span>
+                </div>
+                <div id="contrastValue" class="metric-value">--</div>
+                <div class="metric-description">
+                    Measures contrast and dynamic range improvement. Higher = better contrast. >75 excellent, >50 good, >25 fair.
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-title">
+                    ⚡ High-Frequency Detail Score
+                    <span id="hfIndicator" class="improvement-indicator"></span>
+                </div>
+                <div id="hfValue" class="metric-value">--</div>
+                <div class="metric-description">
+                    Measures preservation of fine textures and micro-details. Higher = more texture detail preserved.
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-title">
+                    📐 Local Contrast Score
+                    <span id="localContrastIndicator" class="improvement-indicator"></span>
+                </div>
+                <div id="localContrastValue" class="metric-value">--</div>
+                <div class="metric-description">
+                    Measures local contrast enhancement (brings out details in shadows/highlights). Higher = better local contrast.
+                </div>
+            </div>
+            
+            <div class="overall-verdict">
+                <div class="verdict-title">🏆 Overall Quality Verdict</div>
+                <div id="verdictText" class="verdict-text">--</div>
+                <div id="improvementSummary" style="margin-top: 15px; font-size: 1.1em;">--</div>
+            </div>
+        </div>
+        
+        <div id="error" class="error"></div>
+    </div>
+
+    <script>
+        let imageDataA = null;
+        let imageDataB = null;
+
+        function setupFileInput(inputId, previewId, dataVar) {
+            const input = document.getElementById(inputId);
+            const preview = document.getElementById(previewId);
+            
+            input.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                        
+                        const img = new Image();
+                        img.onload = function() {
+                            // Store original image data for later resizing
+                            if (dataVar === 'A') {
+                                window.originalImageA = img;
+                                imageDataA = null; // Will be set after both images loaded
+                            } else {
+                                window.originalImageB = img;
+                                imageDataB = null; // Will be set after both images loaded
+                            }
+                            
+                            checkIfReadyToCalculate();
+                        };
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        function resizeImagesToSameDimensions() {
+            if (!window.originalImageA || !window.originalImageB) return false;
+            
+            // Use the smaller dimensions to avoid upscaling
+            const targetWidth = Math.min(window.originalImageA.width, window.originalImageB.width);
+            const targetHeight = Math.min(window.originalImageA.height, window.originalImageB.height);
+            
+            // Resize Image A
+            const canvasA = document.createElement('canvas');
+            const ctxA = canvasA.getContext('2d');
+            canvasA.width = targetWidth;
+            canvasA.height = targetHeight;
+            ctxA.drawImage(window.originalImageA, 0, 0, targetWidth, targetHeight);
+            imageDataA = ctxA.getImageData(0, 0, targetWidth, targetHeight);
+            
+            // Resize Image B
+            const canvasB = document.createElement('canvas');
+            const ctxB = canvasB.getContext('2d');
+            canvasB.width = targetWidth;
+            canvasB.height = targetHeight;
+            ctxB.drawImage(window.originalImageB, 0, 0, targetWidth, targetHeight);
+            imageDataB = ctxB.getImageData(0, 0, targetWidth, targetHeight);
+            
+            return true;
+        }
+
+        function checkIfReadyToCalculate() {
+            const calculateBtn = document.getElementById('calculateBtn');
+            if (window.originalImageA && window.originalImageB) {
+                calculateBtn.disabled = false;
+            }
+        }
+
+        function calculatePSNR(imgA, imgB) {
+            let mse = 0;
+            const pixelCount = imgA.width * imgA.height;
+            
+            for (let i = 0; i < imgA.data.length; i += 4) {
+                const rDiff = imgA.data[i] - imgB.data[i];
+                const gDiff = imgA.data[i + 1] - imgB.data[i + 1];
+                const bDiff = imgA.data[i + 2] - imgB.data[i + 2];
+                
+                mse += (rDiff * rDiff + gDiff * gDiff + bDiff * bDiff) / 3;
+            }
+            
+            mse /= pixelCount;
+            
+            if (mse === 0) return { psnr: Infinity, mse: 0 };
+            
+            const maxPixelValue = 255;
+            const psnr = 20 * Math.log10(maxPixelValue / Math.sqrt(mse));
+            
+            return { psnr: psnr, mse: mse };
+        }
+
+        function calculateSSIM(imgA, imgB) {
+            // Simplified SSIM calculation
+            const width = imgA.width;
+            const height = imgA.height;
+            
+            // Convert to grayscale
+            const grayA = [];
+            const grayB = [];
+            
+            for (let i = 0; i < imgA.data.length; i += 4) {
+                grayA.push(0.299 * imgA.data[i] + 0.587 * imgA.data[i + 1] + 0.114 * imgA.data[i + 2]);
+                grayB.push(0.299 * imgB.data[i] + 0.587 * imgB.data[i + 1] + 0.114 * imgB.data[i + 2]);
+            }
+            
+            // Calculate means
+            const meanA = grayA.reduce((sum, val) => sum + val, 0) / grayA.length;
+            const meanB = grayB.reduce((sum, val) => sum + val, 0) / grayB.length;
+            
+            // Calculate variances and covariance
+            let varA = 0, varB = 0, covarAB = 0;
+            
+            for (let i = 0; i < grayA.length; i++) {
+                const diffA = grayA[i] - meanA;
+                const diffB = grayB[i] - meanB;
+                varA += diffA * diffA;
+                varB += diffB * diffB;
+                covarAB += diffA * diffB;
+            }
+            
+            varA /= (grayA.length - 1);
+            varB /= (grayB.length - 1);
+            covarAB /= (grayA.length - 1);
+            
+            // SSIM constants
+            const c1 = (0.01 * 255) ** 2;
+            const c2 = (0.03 * 255) ** 2;
+            
+            const ssim = ((2 * meanA * meanB + c1) * (2 * covarAB + c2)) /
+                        ((meanA * meanA + meanB * meanB + c1) * (varA + varB + c2));
+            
+            return Math.max(0, Math.min(1, ssim));
+        }
+
+        function calculateDetailSharpness(imgA, imgB) {
+            const data = [];
+            
+            // Convert both images to grayscale arrays
+            for (let i = 0; i < imgA.data.length; i += 4) {
+                data.push({
+                    a: 0.299 * imgA.data[i] + 0.587 * imgA.data[i + 1] + 0.114 * imgA.data[i + 2],
+                    b: 0.299 * imgB.data[i] + 0.587 * imgB.data[i + 1] + 0.114 * imgB.data[i + 2]
+                });
+            }
+            
+            const width = imgA.width;
+            const height = imgA.height;
+            let sharpnessA = 0, sharpnessB = 0, count = 0;
+            
+            // Simple edge detection using adjacent pixel differences
+            for (let y = 1; y < height - 1; y++) {
+                for (let x = 1; x < width - 1; x++) {
+                    const idx = y * width + x;
+                    
+                    // Calculate gradient magnitude
+                    const gradA = Math.abs(data[idx + 1].a - data[idx - 1].a) + 
+                                 Math.abs(data[idx + width].a - data[idx - width].a);
+                    const gradB = Math.abs(data[idx + 1].b - data[idx - 1].b) + 
+                                 Math.abs(data[idx + width].b - data[idx - width].b);
+                    
+                    sharpnessA += gradA;
+                    sharpnessB += gradB;
+                    count++;
+                }
+            }
+            
+            return count > 0 ? (sharpnessB / Math.max(sharpnessA, 1)) * 100 : 100;
+        }
+
+        function calculateContrastEnhancement(imgA, imgB) {
+            const pixelsA = [], pixelsB = [];
+            
+            // Convert to grayscale
+            for (let i = 0; i < imgA.data.length; i += 4) {
+                pixelsA.push(0.299 * imgA.data[i] + 0.587 * imgA.data[i + 1] + 0.114 * imgA.data[i + 2]);
+                pixelsB.push(0.299 * imgB.data[i] + 0.587 * imgB.data[i + 1] + 0.114 * imgB.data[i + 2]);
+            }
+            
+            // Calculate standard deviation (simple contrast measure)
+            const meanA = pixelsA.reduce((sum, val) => sum + val, 0) / pixelsA.length;
+            const meanB = pixelsB.reduce((sum, val) => sum + val, 0) / pixelsB.length;
+            
+            let varA = 0, varB = 0;
+            for (let i = 0; i < pixelsA.length; i++) {
+                varA += Math.pow(pixelsA[i] - meanA, 2);
+                varB += Math.pow(pixelsB[i] - meanB, 2);
+            }
+            
+            const stdA = Math.sqrt(varA / pixelsA.length);
+            const stdB = Math.sqrt(varB / pixelsB.length);
+            
+            return (stdB / Math.max(stdA, 1)) * 100;
+        }
+
+        function calculateHighFrequencyDetail(imgA, imgB) {
+            const width = imgA.width;
+            const height = imgA.height;
+            let hfA = 0, hfB = 0, count = 0;
+            
+            // Sample every 4th pixel to reduce computation
+            for (let y = 2; y < height - 2; y += 2) {
+                for (let x = 2; x < width - 2; x += 2) {
+                    const idx = (y * width + x) * 4;
+                    
+                    // Get grayscale values for 3x3 neighborhood
+                    const grayA = [], grayB = [];
+                    for (let dy = -1; dy <= 1; dy++) {
+                        for (let dx = -1; dx <= 1; dx++) {
+                            const nIdx = ((y + dy) * width + (x + dx)) * 4;
+                            grayA.push(0.299 * imgA.data[nIdx] + 0.587 * imgA.data[nIdx + 1] + 0.114 * imgA.data[nIdx + 2]);
+                            grayB.push(0.299 * imgB.data[nIdx] + 0.587 * imgB.data[nIdx + 1] + 0.114 * imgB.data[nIdx + 2]);
+                        }
+                    }
+                    
+                    // Simple high-pass filter
+                    const centerA = grayA[4]; // center pixel
+                    const centerB = grayB[4];
+                    const avgA = grayA.reduce((sum, val) => sum + val, 0) / 9;
+                    const avgB = grayB.reduce((sum, val) => sum + val, 0) / 9;
+                    
+                    hfA += Math.abs(centerA - avgA);
+                    hfB += Math.abs(centerB - avgB);
+                    count++;
+                }
+            }
+            
+            return count > 0 ? (hfB / Math.max(hfA, 1)) * 100 : 100;
+        }
+
+        function calculateLocalContrast(imgA, imgB) {
+            const width = imgA.width;
+            const height = imgA.height;
+            let contrastA = 0, contrastB = 0, count = 0;
+            
+            // Sample every 8th pixel for performance
+            for (let y = 4; y < height - 4; y += 4) {
+                for (let x = 4; x < width - 4; x += 4) {
+                    // Calculate local contrast in 5x5 window
+                    const pixelsA = [], pixelsB = [];
+                    
+                    for (let dy = -2; dy <= 2; dy++) {
+                        for (let dx = -2; dx <= 2; dx++) {
+                            const idx = ((y + dy) * width + (x + dx)) * 4;
+                            pixelsA.push(0.299 * imgA.data[idx] + 0.587 * imgA.data[idx + 1] + 0.114 * imgA.data[idx + 2]);
+                            pixelsB.push(0.299 * imgB.data[idx] + 0.587 * imgB.data[idx + 1] + 0.114 * imgB.data[idx + 2]);
+                        }
+                    }
+                    
+                    // Calculate local standard deviation
+                    const meanA = pixelsA.reduce((sum, val) => sum + val, 0) / pixelsA.length;
+                    const meanB = pixelsB.reduce((sum, val) => sum + val, 0) / pixelsB.length;
+                    
+                    let varA = 0, varB = 0;
+                    for (let i = 0; i < pixelsA.length; i++) {
+                        varA += Math.pow(pixelsA[i] - meanA, 2);
+                        varB += Math.pow(pixelsB[i] - meanB, 2);
+                    }
+                    
+                    contrastA += Math.sqrt(varA / pixelsA.length);
+                    contrastB += Math.sqrt(varB / pixelsB.length);
+                    count++;
+                }
+            }
+            
+            return count > 0 ? (contrastB / Math.max(contrastA, 1)) * 100 : 100;
+        }
+
+        function getQualityComparison(metricName, valueA, valueB, higherIsBetter = true) {
+            let improvement, indicator;
+            
+            if (higherIsBetter) {
+                improvement = ((valueB - valueA) / valueA) * 100;
+                if (improvement > 5) {
+                    indicator = { class: 'better', text: `+${improvement.toFixed(1)}% Better` };
+                } else if (improvement < -5) {
+                    indicator = { class: 'worse', text: `${improvement.toFixed(1)}% Worse` };
+                } else {
+                    indicator = { class: 'same', text: 'Similar' };
+                }
+            } else {
+                improvement = ((valueA - valueB) / valueA) * 100;
+                if (improvement > 5) {
+                    indicator = { class: 'better', text: `${improvement.toFixed(1)}% Better` };
+                } else if (improvement < -5) {
+                    indicator = { class: 'worse', text: `${Math.abs(improvement).toFixed(1)}% Worse` };
+                } else {
+                    indicator = { class: 'same', text: 'Similar' };
+                }
+            }
+            
+            return indicator;
+        }
+
+        function generateOverallVerdict(sharpness, contrast, hfDetail, localContrast) {
+            const sharpnessGood = sharpness > 110; // 10% improvement
+            const contrastGood = contrast > 110;
+            const hfGood = hfDetail > 110;
+            const localContrastGood = localContrast > 110;
+            
+            const improvementCount = [sharpnessGood, contrastGood, hfGood, localContrastGood].filter(Boolean).length;
+            
+            const avgImprovement = (sharpness + contrast + hfDetail + localContrast) / 4;
+            
+            if (improvementCount >= 3 && avgImprovement > 120) {
+                return {
+                    verdict: "Image B has significantly better detail & contrast!",
+                    summary: `Major improvements in detail sharpness and contrast enhancement. ${((avgImprovement - 100)).toFixed(0)}% better overall.`
+                };
+            } else if (improvementCount >= 2 && avgImprovement > 110) {
+                return {
+                    verdict: "Image B has noticeably better detail & contrast",
+                    summary: `Clear improvements in detail preservation and contrast. ${((avgImprovement - 100)).toFixed(0)}% better overall.`
+                };
+            } else if (avgImprovement > 105) {
+                return {
+                    verdict: "Image B has slightly better detail & contrast",
+                    summary: `Some improvement in detail and contrast quality. ${((avgImprovement - 100)).toFixed(0)}% better overall.`
+                };
+            } else if (avgImprovement > 95) {
+                return {
+                    verdict: "Images have similar detail & contrast levels",
+                    summary: "Minimal differences in detail preservation and contrast."
+                };
+            } else {
+                return {
+                    verdict: "Image A has better detail & contrast",
+                    summary: `Image B shows reduced detail or contrast quality. ${((100 - avgImprovement)).toFixed(0)}% worse overall.`
+                };
+            }
+        }
+
+        // Setup file inputs
+        setupFileInput('imageA', 'previewA', 'A');
+        setupFileInput('imageB', 'previewB', 'B');
+
+        // Calculate button click handler
+        document.getElementById('calculateBtn').addEventListener('click', function() {
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+            const error = document.getElementById('error');
+            
+            loading.style.display = 'block';
+            results.style.display = 'none';
+            error.textContent = '';
+            
+            setTimeout(() => {
+                try {
+                    // Resize images to same dimensions first
+                    if (!resizeImagesToSameDimensions()) {
+                        throw new Error('Failed to prepare images for comparison');
+                    }
+                    
+                    // Show dimension info
+                    console.log(`Comparing images at ${imageDataA.width}×${imageDataA.height}`);
+                    
+                    const sharpness = calculateDetailSharpness(imageDataA, imageDataB);
+                    const contrast = calculateContrastEnhancement(imageDataA, imageDataB);
+                    const hfDetail = calculateHighFrequencyDetail(imageDataA, imageDataB);
+                    const localContrast = calculateLocalContrast(imageDataA, imageDataB);
+                    
+                    // Update Detail Sharpness
+                    document.getElementById('sharpnessValue').textContent = sharpness.toFixed(1) + '%';
+                    const sharpnessComp = getQualityComparison('Sharpness', 100, sharpness, true);
+                    const sharpnessIndicator = document.getElementById('sharpnessIndicator');
+                    sharpnessIndicator.className = `improvement-indicator ${sharpnessComp.class}`;
+                    sharpnessIndicator.textContent = sharpnessComp.text;
+                    
+                    // Update Contrast Enhancement
+                    document.getElementById('contrastValue').textContent = contrast.toFixed(1) + '%';
+                    const contrastComp = getQualityComparison('Contrast', 100, contrast, true);
+                    const contrastIndicator = document.getElementById('contrastIndicator');
+                    contrastIndicator.className = `improvement-indicator ${contrastComp.class}`;
+                    contrastIndicator.textContent = contrastComp.text;
+                    
+                    // Update High-Frequency Detail
+                    document.getElementById('hfValue').textContent = hfDetail.toFixed(1) + '%';
+                    const hfComp = getQualityComparison('HF Detail', 100, hfDetail, true);
+                    const hfIndicator = document.getElementById('hfIndicator');
+                    hfIndicator.className = `improvement-indicator ${hfComp.class}`;
+                    hfIndicator.textContent = hfComp.text;
+                    
+                    // Update Local Contrast
+                    document.getElementById('localContrastValue').textContent = localContrast.toFixed(1) + '%';
+                    const localContrastComp = getQualityComparison('Local Contrast', 100, localContrast, true);
+                    const localContrastIndicator = document.getElementById('localContrastIndicator');
+                    localContrastIndicator.className = `improvement-indicator ${localContrastComp.class}`;
+                    localContrastIndicator.textContent = localContrastComp.text;
+                    
+                    // Overall verdict
+                    const verdict = generateOverallVerdict(sharpness, contrast, hfDetail, localContrast);
+                    document.getElementById('verdictText').textContent = verdict.verdict;
+                    document.getElementById('improvementSummary').textContent = verdict.summary;
+                    
+                    loading.style.display = 'none';
+                    results.style.display = 'block';
+                    
+                } catch (e) {
+                    loading.style.display = 'none';
+                    error.textContent = 'Error: ' + e.message;
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
