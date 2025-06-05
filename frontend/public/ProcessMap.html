@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X-Ray Image Enhancement Process Map</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0;
+        }
+
+        .phase {
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            border-right: 2px solid #ecf0f1;
+        }
+
+        .phase:last-child {
+            border-right: none;
+        }
+
+        .phase-number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .phase-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+
+        .phase-tech {
+            font-size: 0.85em;
+            color: #555;
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+
+        .tech-stack {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            border-left: 3px solid #3498db;
+        }
+
+        .tech-item {
+            font-size: 0.75em;
+            color: #2980b9;
+            margin: 3px 0;
+            font-weight: 500;
+        }
+
+        .data-flow {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .highlight-metrics {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            font-size: 0.85em;
+        }
+
+        .metric {
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 1.4em;
+            font-weight: bold;
+            display: block;
+        }
+
+        .metric-label {
+            font-size: 0.8em;
+            opacity: 0.9;
+            margin-top: 2px;
+        }
+
+        .arrow-overlay {
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #3498db;
+            font-size: 1.5em;
+            z-index: 10;
+            background: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .phase:last-child .arrow-overlay {
+            display: none;
+        }
+
+        .model-types {
+            background: #34495e;
+            color: white;
+            padding: 10px;
+            font-size: 0.8em;
+            text-align: center;
+        }
+
+        .models {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .model {
+            background: rgba(255,255,255,0.1);
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 0.75em;
+        }
+
+        @media (max-width: 1000px) {
+            .process-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .phase {
+                border-right: none;
+                border-bottom: 2px solid #ecf0f1;
+            }
+            
+            .phase:last-child {
+                border-bottom: none;
+            }
+            
+            .arrow-overlay {
+                right: 50%;
+                top: auto;
+                bottom: -15px;
+                transform: translateX(50%) rotate(90deg);
+            }
+            
+            .highlight-metrics {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🩻 ClearView: X-Ray Image Enhancement Process</h1>
+            <p>Deep Learning Pipeline for 4x Resolution Enhancement</p>
+        </div>
+
+        <div class="process-grid">
+            <!-- Phase 1 -->
+            <div class="phase">
+                <div class="phase-number">1</div>
+                <div class="phase-title">Data Preparation</div>
+                <div class="phase-tech">Convert raw X-rays into training-ready datasets with standardized dimensions</div>
+                <div class="tech-stack">
+                    <div class="tech-item">• OpenCV image processing</div>
+                    <div class="tech-item">• 256×256 → 64×64 downsampling</div>
+                    <div class="tech-item">• Grayscale normalization [0,1]</div>
+                    <div class="tech-item">• HR/LR pair generation</div>
+                </div>
+                <div class="arrow-overlay">→</div>
+            </div>
+
+            <!-- Phase 2 -->
+            <div class="phase">
+                <div class="phase-number">2</div>
+                <div class="phase-title">Neural Architecture</div>
+                <div class="phase-tech">Medical-specific CNN with residual blocks and multi-scale feature extraction</div>
+                <div class="tech-stack">
+                    <div class="tech-item">• Residual connections (6-16 blocks)</div>
+                    <div class="tech-item">• Multi-scale kernels (3×3, 5×5, 7×7)</div>
+                    <div class="tech-item">• Sub-pixel convolution upsampling</div>
+                    <div class="tech-item">• Medical feature optimization</div>
+                </div>
+                <div class="arrow-overlay">→</div>
+            </div>
+
+            <!-- Phase 3 -->
+            <div class="phase">
+                <div class="phase-number">3</div>
+                <div class="phase-title">Model Training</div>
+                <div class="phase-tech">Supervised learning with advanced optimization and automated monitoring</div>
+                <div class="tech-stack">
+                    <div class="tech-item">• MSE + MAE loss functions</div>
+                    <div class="tech-item">• Adam optimizer (lr=0.0001)</div>
+                    <div class="tech-item">• 80/20 train/validation split</div>
+                    <div class="tech-item">• Early stopping & checkpoints</div>
+                </div>
+                <div class="arrow-overlay">→</div>
+            </div>
+
+            <!-- Phase 4 -->
+            <div class="phase">
+                <div class="phase-number">4</div>
+                <div class="phase-title">Image Enhancement</div>
+                <div class="phase-tech">Real-time processing with advanced pre/post-processing pipeline</div>
+                <div class="tech-stack">
+                    <div class="tech-item">• Histogram equalization</div>
+                    <div class="tech-item">• Neural network inference</div>
+                    <div class="tech-item">• Sharpening + contrast boost</div>
+                    <div class="tech-item">• Quality validation</div>
+                </div>
+                <div class="arrow-overlay">→</div>
+            </div>
+
+            <!-- Phase 5 -->
+            <div class="phase">
+                <div class="phase-number">5</div>
+                <div class="phase-title">UI & Annotation</div>
+                <div class="phase-tech">React frontend with medical annotation tools and comparison interface</div>
+                <div class="tech-stack">
+                    <div class="tech-item">• Flask REST API integration</div>
+                    <div class="tech-item">• Side-by-side comparison</div>
+                    <div class="tech-item">• Canvas-based annotations</div>
+                    <div class="tech-item">• Real-time processing UI</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="model-types">
+            <strong>Neural Network Architectures Implemented:</strong>
+            <div class="models">
+                <div class="model">Enhanced ESPCN<br><small>Efficient sub-pixel CNN</small></div>
+                <div class="model">Medical-Specific<br><small>X-ray optimized features</small></div>
+                <div class="model">SRGAN Generator<br><small>Adversarial training</small></div>
+            </div>
+        </div>
+
+        <div class="data-flow">
+            <strong>Data Flow:</strong> Raw X-ray → Preprocessing → AI Enhancement → Post-processing → 4x Enhanced Medical Image
+        </div>
+
+        <div class="highlight-metrics">
+            <div class="metric">
+                <span class="metric-value">4x</span>
+                <div class="metric-label">Resolution<br>Enhancement</div>
+            </div>
+            <div class="metric">
+                <span class="metric-value">64→256</span>
+                <div class="metric-label">Pixel<br>Upscaling</div>
+            </div>
+            <div class="metric">
+                <span class="metric-value">3</span>
+                <div class="metric-label">AI Models<br>Implemented</div>
+            </div>
+            <div class="metric">
+                <span class="metric-value">Real-time</span>
+                <div class="metric-label">Processing<br>Speed</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
