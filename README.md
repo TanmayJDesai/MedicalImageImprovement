@@ -2,7 +2,7 @@
 
 > Improving diagnostic quality of chest X-rays using deep learning super-resolution — built to support health equity in underserved communities.
 
-**UCLA CS Project** | Tanmay Desai, Brandon Tran, Emma Vidal, Leo Thit
+**UCLA CS Project** |
 
 ---
 
