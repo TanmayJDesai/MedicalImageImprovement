@@ -14,7 +14,7 @@ ClearView is an open-source pipeline that takes a low-quality chest X-ray and ou
 
 ---
 
-![ClearView Project Poster](assets/poster.png)
+![ClearView Project Poster](poster.jpg)
 
 ---
 
