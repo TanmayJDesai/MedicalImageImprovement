@@ -1,240 +1,172 @@
-# ClearView: Improving X-Ray Image Quality — Setup Guide
+# ClearView: AI-Powered X-Ray Image Enhancement
 
-![cs188logo](https://github.com/user-attachments/assets/26776dfe-aa88-4eaf-bb54-b9b9cc657369)
+> Improving diagnostic quality of chest X-rays using deep learning super-resolution — built to support health equity in underserved communities.
 
-Medical workers in underserved communities do not have immediate access to adequate imaging equipment, leading to low-quality/lack of necessary images for diagnoses. Diagnoses could be more accurate with improved x-ray quality, leading to life-saving outcomes in many cases with basic x-ray images. 
+**UCLA CS Project** | Tanmay Desai, Brandon Tran, Emma Vidal, Leo Thit
 
-We worked on making an open-source technical pipeline that improves X-Ray Quality. This guide walks you through setting up and running the our project from scratch. It's written to be beginner-friendly — no prior experience with Git or VS Code is assumed.
+---
 
+## Motivation
 
-## Prerequisites
+**1.4 billion** chest X-rays are taken globally each year. In low- and middle-income hospitals, fewer than 1% have access to high-quality imaging equipment, compared to 47% of broken or idle machines in these regions. Poor image quality directly impacts diagnostic accuracy — AI-enhanced images have been shown to increase pneumonia detection sensitivity by up to 66%.
 
-Before you begin, make sure you have the following installed:
-- Git
-- Python 3.8 or higher
+ClearView is an open-source pipeline that takes a low-quality chest X-ray and outputs a 4x super-resolution enhanced version in real time, with no specialized hardware required.
+
+---
+
+![ClearView Project Poster](assets/poster.png)
+
+---
+
+## Results
+
+Evaluated across 5 test images from the NIH Chest X-ray dataset:
+
+| Test Image | Detail Sharpness | Contrast | High-Freq Detail | Local Contrast | Rating |
+|---|---|---|---|---|---|
+| Image 1 | +76% | +12% | +84% | +71% | ✅ Excellent |
+| Image 2 | +44% | +19% | +26% | +51% | ✅ Significant |
+| Image 3 | +68% | +15% | +71% | +69% | ✅ Excellent |
+| Image 4 | +5% | +13% | -20% | +7% | ⚠️ Similar |
+| Image 5 | +49% | +36% | +49% | +45% | ✅ Significant |
+
+**Overall: 80% success rate (4/5 images), +19% average contrast enhancement, +48% average detail improvement**
+
+The model performs best on images with clear anatomical structures. Image #4 showed minimal enhancement, indicating model limitations on certain image types — an area for future work.
+
+---
+
+## Technical Architecture
+
+### Three Neural Network Models Implemented
+
+**1. Enhanced ESPCN (Efficient Sub-Pixel CNN)**
+- 6 residual blocks with skip connections
+- Sub-pixel convolution (pixel shuffling) for upscaling
+- Efficient architecture optimized for real-time inference
+
+**2. Medical-Specific CNN**
+- Multi-scale feature extraction with parallel branches (3×3, 5×5, 7×7 kernels)
+- 8 dense residual blocks tuned for radiological image characteristics
+- Designed to preserve fine anatomical detail
+
+**3. SRGAN-Style Generator**
+- 16 residual blocks with batch normalization
+- PReLU activations throughout
+- Adversarial training objective for perceptually sharper outputs
+
+### Pipeline
+
+```
+Raw X-Ray → Preprocessing → AI Enhancement → Post-processing → 4x Enhanced Image
+  (input)   (64×64 norm)   (model predict)  (sharpen + CLAHE)   (256×256 output)
+```
+
+**Preprocessing:** OpenCV grayscale loading → histogram equalization → Gaussian denoising → normalization to [0,1] → HR/LR pair generation (256×256 and 64×64)
+
+**Training:** MSE + MAE loss, Adam optimizer (lr=0.0001), 80/20 train/val split, early stopping + ReduceLROnPlateau callbacks, ModelCheckpoint saving best weights
+
+**Post-processing:** Neural network inference → sharpening filter (unsharp mask) → contrast boost via histogram equalization → side-by-side comparison output
+
+### Stack
+
+| Layer | Technology |
+|---|---|
+| Model | TensorFlow / Keras |
+| Backend | Python, Flask REST API |
+| Frontend | React |
+| Image Processing | OpenCV, NumPy |
+| Dataset | NIH Chest X-ray (Normal subset) |
+
+---
+
+## User Research
+
+Conducted surveys and semi-structured interviews with **n=14 participants** across radiology facility managers, medical doctors, registered nurses, pre-medical students, and patients.
+
+Key findings:
+- Image quality and diagnostic accuracy are most impacted by blurriness, low resolution, poor contrast, and user error
+- Imaging disparities are most severe in low-income regions lacking modern equipment and trained radiologists
+- Participants are receptive to AI-assisted enhancement tools **as long as they remain clinician-centered aids**
+
+---
+
+## Setup
+
+### Prerequisites
+- Python 3.8+
 - Node.js and npm
-- Visual Studio Code
+- Git
 
-### Download Links
+### Installation
 
-- Git: [https://git-scm.com/downloads](https://git-scm.com/downloads)
-- Python: [https://www.python.org/downloads/](https://www.python.org/downloads/)
-- Node.js: [https://nodejs.org/](https://nodejs.org/)
-- VS Code: [https://code.visualstudio.com/](https://code.visualstudio.com/)
-
-## Overview of Steps
-
-You will:
-1. Fork the GitHub repository and clone it to your computer
-2. Create your own branch to work on
-3. Install required dependencies
-4. Run the backend (Python)
-5. Run the frontend (React)
-6. Make changes, commit, and push them
-
-## 1. Access the Repository and Set Up Git
-
-### a. Fork the Repository
-
-1. Go to [https://github.com/TanmayJDesai/MedicalImageImprovement](https://github.com/TanmayJDesai/MedicalImageImprovement)
-2. Click the "Fork" button in the top-right corner
-3. This creates a copy of the repository in your GitHub account
-
-### b. Clone Your Forked Repository
-
-Open your terminal (Mac) or Command Prompt (Windows):
-
+**1. Clone the repository**
 ```bash
-git clone https://github.com/YOUR_USERNAME/MedicalImageImprovement.git
+git clone https://github.com/TanmayJDesai/MedicalImageImprovement.git
 cd MedicalImageImprovement
 ```
 
-### c. Add the Original Repository as a Remote
-
-This allows you to pull updates from the original repository:
-
-```bash
-git remote add upstream https://github.com/TanmayJDesai/MedicalImageImprovement.git
-```
-
-## 2. Create Your Own Branch
-
-Create and switch to a new branch using your name:
-
-```bash
-git checkout -b yourname
-```
-
-For example:
-```bash
-git checkout -b john-smith
-```
-
-This makes it clear who owns each branch and simplifies merging at the project's conclusion.
-
-## 3. Install Project Dependencies
-
-### A. Backend (Python/Flask)
-
-**Mac**
-
+**2. Backend (Python/Flask)**
 ```bash
 cd backend
 python3 -m venv venv
-source venv/bin/activate
+source venv/bin/activate          # Mac/Linux
+# venv\Scripts\activate           # Windows
 pip install -r requirements.txt
 ```
 
-**Windows**
-
-```bash
-cd backend
-python -m venv venv
-venv\Scripts\activate
-pip install -r requirements.txt
-```
-
-### B. Frontend (React)
-
-Works the same on Mac and Windows:
-
+**3. Frontend (React)**
 ```bash
 cd ../frontend
 npm install
 ```
 
-## 4. Running the Application
+### Running the App
 
-### A. Start the Backend Server
-
-**Mac**
-
+Start the backend (runs on port 5002):
 ```bash
 cd backend
 source venv/bin/activate
 python3 app.py
 ```
 
-**Windows**
-
-```bash
-cd backend
-venv\Scripts\activate
-python app.py
-```
-
-The backend will run at http://localhost:5000.
-
-### B. Start the Frontend Server
-
-Open a new terminal window:
-
+Start the frontend in a new terminal (runs on port 3000):
 ```bash
 cd frontend
 npm start
 ```
 
-This will open the frontend at http://localhost:3000.
+Open `http://localhost:3000` in your browser.
 
-## 5. Making Changes and Contributing
+### Training Your Own Model
 
-### a. Make Your Changes
-
-1. Open the project in VS Code: `code .`
-2. Make changes to the files you want to modify
-3. Test your changes locally
-
-### b. Commit Your Changes
-
+First preprocess the NIH dataset images:
 ```bash
-# See what files you've changed
-git status
-
-# Add the files you want to commit
-git add file1 file2
-
-# Or add all changed files
-git add .
-
-# Commit with a descriptive message
-git commit -m "Add feature X" or "Fix bug Y"
+python preprocess_images.py
 ```
 
-### c. Push Your Changes to GitHub
-
+Then train:
 ```bash
-git push origin yourname
+python train_enhanced_model.py
 ```
 
-### d. Create a Pull Request
+Trained models are saved to `models/` with training history plots.
 
-1. Go to your forked repository on GitHub
-2. Click the "Pull Request" button
-3. Select your branch and click "Create Pull Request"
-4. Add a title and description explaining your changes
-5. Submit the pull request
+---
 
-## 6. Keeping Your Fork Updated
+## Limitations & Future Work
 
-To get updates from the original repository:
+- Model #4 showed degraded high-frequency detail on certain image types — exploring perceptual loss functions (VGG-based) as a next step
+- Current evaluation is qualitative; future work should include PSNR/SSIM benchmarks against ground truth
+- Pipeline could be extended to DICOM format support for clinical integration
+- Potential to expand beyond chest X-rays to other modalities (MRI, CT)
 
-```bash
-git checkout main
-git pull upstream main
-git push origin main
-```
+---
 
-Then switch back to your personal branch:
+## References
 
-```bash
-git checkout yourname
-git merge main
-```
+- Ajmil, A., Smith, J., & Lee, R. (2013). *Chest X-ray Foreign Objects Detection Using Artificial Intelligence*
+- de Labouchere, R., Tanaka, T., & Morales, D. (2024). *Utility of bone suppression imaging for the detection of pneumonia on chest radiography*
+- Perry, L., & Malkin, R. (2011). *Effectiveness of medical equipment donations to improve health systems: how much medical equipment is broken in the developing world?*
 
-## 7. Opening the Project in VS Code
-
-1. Open Visual Studio Code
-2. Click "File" > "Open Folder"
-3. Select the MedicalImageImprovement folder
-4. Open a terminal in VS Code: "Terminal" > "New Terminal"
-5. Follow the instructions above to install dependencies and run the backend and frontend
-
-## Troubleshooting
-
-### Port 5000 Already in Use (Backend)
-
-**Mac**
-
-```bash
-lsof -i :5000
-kill -9 [PID]
-```
-
-**Windows**
-
-```bash
-netstat -ano | findstr :5000
-taskkill /PID [PID] /F
-```
-
-### npm Install Fails (Frontend)
-
-```bash
-rm -rf node_modules
-npm cache clean --force
-npm install
-```
-
-### Git Authentication Issues
-
-If you're having trouble authenticating with GitHub:
-1. Make sure you've set up SSH keys or using GitHub CLI
-2. Or use HTTPS with a personal access token
-3. See GitHub's documentation: [https://docs.github.com/en/authentication](https://docs.github.com/en/authentication)
-
-## Notes
-
-- The backend runs on port 5000, and the frontend runs on port 3000.
-- Both must be running simultaneously for the application to function.
-- Always work on your own name-based branch - don't work directly on the main branch.
-- Include descriptive commit messages to explain your changes.
+---
