@@ -1,0 +1,30 @@
+# Python
+myenv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.h5
+*.egg-info/
+dist/
+build/
+
+# Node
+node_modules/
+npm-debug.log
+.npm
+
+# Environment
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Uploads (user data, not code)
+backend/uploads/
+
+# Model weights (too large for git)
+models/
