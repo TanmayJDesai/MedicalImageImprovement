@@ -8,7 +8,7 @@
 
 ## Motivation
 
-**1.4 billion** chest X-rays are taken globally each year. In low- and middle-income hospitals, fewer than 1% have access to high-quality imaging equipment, compared to 47% of broken or idle machines in these regions. Poor image quality directly impacts diagnostic accuracy — AI-enhanced images have been shown to increase pneumonia detection sensitivity by up to 66%.
+**1.4 billion** chest X-rays are taken globally each year. In low- and middle-income hospitals, fewer than 1% have access to high-quality imaging equipment, compared to 47% of broken or idle machines in these regions. Poor image quality directly impacts diagnostic accuracy, AI-enhanced images have been shown to increase pneumonia detection sensitivity by up to 66%.
 
 ClearView is an open-source pipeline that takes a low-quality chest X-ray and outputs a 4x super-resolution enhanced version in real time, with no specialized hardware required.
 
@@ -32,7 +32,7 @@ Evaluated across 5 test images from the NIH Chest X-ray dataset:
 
 **Overall: 80% success rate (4/5 images), +19% average contrast enhancement, +48% average detail improvement**
 
-The model performs best on images with clear anatomical structures. Image #4 showed minimal enhancement, indicating model limitations on certain image types — an area for future work.
+The model performs best on images with clear anatomical structures. Image #4 showed minimal enhancement, indicating model limitations on certain image types: an area for future work.
 
 ---
 
